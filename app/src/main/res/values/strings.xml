@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyTodo</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="button_add_item">Add Item</string>
+    <string name="enter_a_new_item">Enter a new Item</string>
+    <string name="label_edit_item">Edit Item:</string>
+    <string name="btn_save_item">Save</string>
+</resources>
