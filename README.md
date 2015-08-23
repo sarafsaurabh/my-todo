@@ -2,6 +2,7 @@
 
 MyTodo is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing item.
 
+
 Submitted by: Saurabh Sraf
 
 Time spent: 4 hours spent in total
@@ -18,13 +19,13 @@ The following **required** functionality is completed:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='https://drive.google.com/file/d/0B0CEn-PfBwNmN01LM09nWkZPM2c/view?usp=sharing' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/lWwDyoI.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-Describe any challenges encountered while building the app.
+I applied for the bootcamp yesterday (August 21, 2015). Considering the deadline for the application is nearing, I am subitting my application with the essential checklist completed. I am also working on completing the enhancements to the applications metioned on CodePath.
 
 ## License
 
