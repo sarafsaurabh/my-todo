@@ -23,9 +23,6 @@ Here's a walkthrough of implemented user stories:
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
-## Notes
-
-I applied for the bootcamp yesterday (August 21, 2015). Considering the deadline for the application is nearing, I am submitting my application with the essential checklist completed. I am also working on completing the enhancements to the app as described on CodePath.
 
 ## License
 
