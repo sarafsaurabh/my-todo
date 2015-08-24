@@ -1,5 +1,6 @@
 package com.example.mytodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -9,26 +10,30 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.common.base.Strings;
 
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import static com.google.common.collect.Lists.newArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView lvItems;
-    int selectedPosition = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         lvItems = (ListView)  findViewById(R.id.lvItems);
-        items = new ArrayList<String>();
+        items = newArrayList();
         readItems();
         itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(itemsAdapter);
@@ -55,10 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
-                        setContentView(R.layout.activity_edit_item);
-                        EditText etEditItem = (EditText) findViewById(R.id.etEditItem);
-                        etEditItem.setText(itemsAdapter.getItem(pos));
-                        selectedPosition = pos;
+                        //bring up edit item activity
+                        Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                        i.putExtra("item", itemsAdapter.getItem(pos));
+                        i.putExtra("pos", pos);
+                        startActivityForResult(i, 0); // not using request code as of now
                     }
                 }
         );
@@ -88,25 +94,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void onAddItem(View view) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
+        if(Strings.isNullOrEmpty(etNewItem.getText().toString())) {
+            Toast.makeText(this, "Item value is invalid", Toast.LENGTH_SHORT).show();
+            return;
+        }
         itemsAdapter.add(etNewItem.getText().toString());
         etNewItem.setText("");
         writeItems();
     }
 
-    public void onEditItem(View view) {
-        EditText etNewItem = (EditText) findViewById(R.id.etEditItem);
-        items.set(selectedPosition, etNewItem.getText().toString());
-        itemsAdapter.notifyDataSetChanged();
-        writeItems();
-        // refresh main activity
-        super.recreate();
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent i) {
+        if (resultCode == RESULT_OK) {
+            String itemValue = i.getStringExtra("item");
+            int pos = i.getIntExtra("pos", 0);
+            items.set(pos, itemValue);
+            itemsAdapter.notifyDataSetChanged();
+            Toast.makeText(this, "Item successfully edited", Toast.LENGTH_SHORT).show();
+            writeItems();
+        } else {
+            Toast.makeText(this, "Unable to Edit Item", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
     private void readItems() {
         File todoFile = new File(getFilesDir(), "todo.txt");
         try {
-            items = new ArrayList<String>(FileUtils.readLines(todoFile));
+            items = newArrayList(FileUtils.readLines(todoFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
