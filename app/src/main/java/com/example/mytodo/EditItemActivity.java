@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -21,6 +23,20 @@ public class EditItemActivity extends AppCompatActivity {
         String itemValue = getIntent().getStringExtra("item");
         etEditItem.setText(itemValue);
         etEditItem.setSelection(itemValue.length());
+
+        CalendarView cal = (CalendarView) findViewById(R.id.calendarView);
+        cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day){
+
+                // add one because month starts at 0
+                month = month + 1;
+                // output to log cat **not sure how to format year to two places here**
+                String newDate = year+"-"+month+"-"+day;
+                Log.d("NEW_DATE", newDate);
+            }
+        });
+
     }
 
     @Override
