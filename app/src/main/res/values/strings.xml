@@ -6,5 +6,7 @@
     <string name="enter_a_new_item">Enter a new Item</string>
     <string name="label_edit_item">Edit Item:</string>
     <string name="btn_save_item">Save</string>
+    <string name="label_due">Due:</string>
+
 
 </resources>

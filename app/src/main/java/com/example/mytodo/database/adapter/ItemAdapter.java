@@ -20,6 +20,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
     private static class ViewHolder {
         private TextView item;
         private TextView id;
+        private TextView dueDate;
+
     }
 
     public ItemAdapter(Context context, ArrayList<Item> items) {
@@ -37,6 +39,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
             viewHolder = new ViewHolder();
             viewHolder.item = (TextView) convertView.findViewById(R.id.tvValue);
             viewHolder.id = (TextView) convertView.findViewById(R.id.tvId);
+            viewHolder.dueDate = (TextView) convertView.findViewById(R.id.tvDueDate);
+
             viewHolder.id.setVisibility(View.INVISIBLE);
 
             convertView.setTag(viewHolder);
@@ -47,6 +51,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         Item item = getItem(position);
         viewHolder.item.setText(item.getValue());
         viewHolder.id.setText(item.getId().toString());
+        viewHolder.dueDate.setText(String.valueOf(item.getDueDate().getTime()));
 
         return convertView;
     }

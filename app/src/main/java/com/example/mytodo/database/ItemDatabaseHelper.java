@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.example.mytodo.database.model.Item;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 /**
@@ -20,7 +21,7 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "todo";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table Names
     private static final String TABLE_ITEM = "item";
@@ -28,6 +29,7 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
     // Item Table Columns
     private static final String KEY_ITEM_ID = "id";
     private static final String KEY_ITEM_VALUE = "value";
+    private static final String KEY_ITEM_DUEDATE = "dueDate";
 
     private ItemDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -58,7 +60,8 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
         final String CREATE_ITEM_TABLE_SQL = "CREATE TABLE " + TABLE_ITEM +
                 "(" +
                 KEY_ITEM_ID + " INTEGER PRIMARY KEY," + // Define a primary key
-                KEY_ITEM_VALUE + " TEXT" +
+                KEY_ITEM_VALUE + " TEXT," +
+                KEY_ITEM_DUEDATE + " TEXT" +
                 ")";
 
         db.execSQL(CREATE_ITEM_TABLE_SQL);
@@ -86,6 +89,8 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(KEY_ITEM_VALUE, item.getValue());
+            values.put(KEY_ITEM_DUEDATE, item.getDueDate().getTime());
+
             if(item.getId() == null) {
                 return db.insertOrThrow(TABLE_ITEM, null, values);
             } else {
@@ -116,6 +121,8 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
                     Item item = new Item();
                     item.setId(cursor.getLong(cursor.getColumnIndex(KEY_ITEM_ID)));
                     item.setValue(cursor.getString(cursor.getColumnIndex(KEY_ITEM_VALUE)));
+                    item.setDueDate(
+                            new Date(cursor.getLong(cursor.getColumnIndex(KEY_ITEM_DUEDATE))));
                     items.add(item);
                 } while(cursor.moveToNext());
             }

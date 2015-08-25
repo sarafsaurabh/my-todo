@@ -16,6 +16,7 @@ import com.example.mytodo.database.ItemDatabaseHelper;
 import com.example.mytodo.database.adapter.ItemAdapter;
 import com.example.mytodo.database.model.Item;
 
+import java.sql.Date;
 import java.util.ArrayList;
 
 
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Item item = new Item();
         item.setValue(etNewItem.getText().toString());
+        item.setDueDate(new Date(1L));
         Long id = itemDbHelper.addOrUpdateItem(item);
         item.setId(id);
         itemsAdapter.add(item);
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
             //get and replace item at position
             Item item = items.get(pos);
             item.setValue(itemValue);
+            item.setDueDate(new Date(2L));
             items.set(pos, item);
 
             itemsAdapter.notifyDataSetChanged();
