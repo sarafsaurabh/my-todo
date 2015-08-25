@@ -21,6 +21,7 @@ public class EditItemActivity extends AppCompatActivity {
         EditText etEditItem = (EditText) findViewById(R.id.etEditItem);
         String itemValue = getIntent().getStringExtra("item");
         etEditItem.setText(itemValue);
+        etEditItem.setSelection(itemValue.length());
     }
 
     @Override
