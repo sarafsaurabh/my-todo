@@ -89,7 +89,9 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(KEY_ITEM_VALUE, item.getValue());
-            values.put(KEY_ITEM_DUEDATE, item.getDueDate().getTime());
+            if(item.getDueDate() != null) {
+                values.put(KEY_ITEM_DUEDATE, item.getDueDate().getTime());
+            }
 
             if(item.getId() == null) {
                 return db.insertOrThrow(TABLE_ITEM, null, values);
@@ -121,8 +123,10 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
                     Item item = new Item();
                     item.setId(cursor.getLong(cursor.getColumnIndex(KEY_ITEM_ID)));
                     item.setValue(cursor.getString(cursor.getColumnIndex(KEY_ITEM_VALUE)));
-                    item.setDueDate(
-                            new Date(cursor.getLong(cursor.getColumnIndex(KEY_ITEM_DUEDATE))));
+                    long dueDate = cursor.getLong(cursor.getColumnIndex(KEY_ITEM_DUEDATE));
+                    if(dueDate != 0) {
+                        item.setDueDate(new Date(dueDate));
+                    }
                     items.add(item);
                 } while(cursor.moveToNext());
             }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +11,12 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class EditItemActivity extends AppCompatActivity {
+
+    Long dueDate = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,14 +30,9 @@ public class EditItemActivity extends AppCompatActivity {
 
         CalendarView cal = (CalendarView) findViewById(R.id.calendarView);
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
-
             public void onSelectedDayChange(CalendarView view, int year, int month, int day){
-
-                // add one because month starts at 0
-                month = month + 1;
-                // output to log cat **not sure how to format year to two places here**
-                String newDate = year+"-"+month+"-"+day;
-                Log.d("NEW_DATE", newDate);
+                Calendar c = new GregorianCalendar(year, month, day);
+                dueDate = c.getTimeInMillis();
             }
         });
 
@@ -73,6 +72,10 @@ public class EditItemActivity extends AppCompatActivity {
         // Pass relevant data back as a result
         i.putExtra("item", etEditItem.getText().toString());
         i.putExtra("pos", getIntent().getIntExtra("pos", 0));
+
+        if(dueDate != null) {
+            i.putExtra("dueDate", dueDate);
+        }
 
         // Activity finished ok, return the data
         setResult(RESULT_OK, i); // set result code and bundle data for response

@@ -102,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         }
         Item item = new Item();
         item.setValue(etNewItem.getText().toString());
-        item.setDueDate(new Date(1L));
         Long id = itemDbHelper.addOrUpdateItem(item);
         item.setId(id);
         itemsAdapter.add(item);
@@ -113,13 +112,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent i) {
         if (resultCode == RESULT_OK) {
             String itemValue = i.getStringExtra("item");
-            int pos = i.getIntExtra("pos", 0);
 
             //get and replace item at position
-            Item item = items.get(pos);
+            Item item = items.get(i.getIntExtra("pos", 0));
             item.setValue(itemValue);
-            item.setDueDate(new Date(2L));
-            items.set(pos, item);
+            if(i.hasExtra("dueDate")) {
+                item.setDueDate(new Date(i.getLongExtra("dueDate", 0)));
+            }
+            items.set(i.getIntExtra("pos", 0), item);
 
             itemsAdapter.notifyDataSetChanged();
             itemDbHelper.addOrUpdateItem(item);

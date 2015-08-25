@@ -1,6 +1,7 @@
 package com.example.mytodo.database.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 
 import com.example.mytodo.R;
 import com.example.mytodo.database.model.Item;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.util.ArrayList;
 
@@ -50,8 +54,27 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
         Item item = getItem(position);
         viewHolder.item.setText(item.getValue());
+        viewHolder.item.setTextColor(Color.BLACK);
         viewHolder.id.setText(item.getId().toString());
-        viewHolder.dueDate.setText(String.valueOf(item.getDueDate().getTime()));
+        if(item.getDueDate() != null) {
+            int days = Days.daysBetween(new DateTime(), new DateTime(item.getDueDate())).getDays();
+            if(days < 0) {
+                viewHolder.dueDate.setText("Already Due");
+                viewHolder.dueDate.setTextColor(Color.RED);
+            } else if (days == 0) {
+                viewHolder.dueDate.setText("Due Today");
+                viewHolder.dueDate.setTextColor(Color.RED);
+            } else if (days == 1) {
+                viewHolder.dueDate.setText("Due Tomorrow");
+                viewHolder.dueDate.setTextColor(Color.RED);
+            } else {
+                viewHolder.dueDate.setText("Due In: " + days + " days");
+                viewHolder.dueDate.setTextColor(Color.GREEN);
+            }
+            viewHolder.dueDate.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.dueDate.setVisibility(View.INVISIBLE);
+        }
 
         return convertView;
     }
