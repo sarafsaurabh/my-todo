@@ -3,41 +3,42 @@ package com.example.mytodo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.common.base.Strings;
+import com.example.mytodo.database.ItemDatabaseHelper;
+import com.example.mytodo.database.adapter.ItemAdapter;
+import com.example.mytodo.database.model.Item;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import static com.google.common.collect.Lists.newArrayList;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> items;
-    ArrayAdapter<String> itemsAdapter;
+    ArrayList<Item> items;
+    ItemAdapter itemsAdapter;
     ListView lvItems;
+    ItemDatabaseHelper itemDbHelper;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        itemDbHelper = ItemDatabaseHelper.getInstance(this);
         lvItems = (ListView)  findViewById(R.id.lvItems);
-        items = newArrayList();
+        items = new ArrayList<Item>();
         readItems();
-        itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
+        itemsAdapter = new ItemAdapter(this, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
+        // Get singleton instance of database
     }
 
     private void setupListViewListener() {
@@ -47,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemLongClick(
                             AdapterView<?> adapter, View item, int pos, long id) {
+                        itemDbHelper.deleteItem(items.get(pos));
                         items.remove(pos);
                         itemsAdapter.notifyDataSetChanged();
-                        writeItems();
                         return true;
                     }
                 }
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
                         //bring up edit item activity
                         Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                        i.putExtra("item", itemsAdapter.getItem(pos));
+                        i.putExtra("item", itemsAdapter.getItem(pos).getValue());
                         i.putExtra("pos", pos);
                         startActivityForResult(i, 0); // not using request code as of now
                     }
@@ -94,13 +95,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void onAddItem(View view) {
         EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        if(Strings.isNullOrEmpty(etNewItem.getText().toString())) {
+        if(TextUtils.isEmpty(etNewItem.getText().toString())) {
             Toast.makeText(this, "Item value is invalid", Toast.LENGTH_SHORT).show();
             return;
         }
-        itemsAdapter.add(etNewItem.getText().toString());
+        Item item = new Item();
+        item.setValue(etNewItem.getText().toString());
+        Long id = itemDbHelper.addOrUpdateItem(item);
+        item.setId(id);
+        itemsAdapter.add(item);
         etNewItem.setText("");
-        writeItems();
     }
 
     @Override
@@ -108,10 +112,16 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             String itemValue = i.getStringExtra("item");
             int pos = i.getIntExtra("pos", 0);
-            items.set(pos, itemValue);
+
+            //get and replace item at position
+            Item item = items.get(pos);
+            item.setValue(itemValue);
+            items.set(pos, item);
+
             itemsAdapter.notifyDataSetChanged();
+            itemDbHelper.addOrUpdateItem(item);
             Toast.makeText(this, "Item successfully edited", Toast.LENGTH_SHORT).show();
-            writeItems();
+
         } else {
             Toast.makeText(this, "Unable to Edit Item", Toast.LENGTH_SHORT).show();
         }
@@ -119,20 +129,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void readItems() {
-        File todoFile = new File(getFilesDir(), "todo.txt");
-        try {
-            items = newArrayList(FileUtils.readLines(todoFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeItems() {
-        File todoFile = new File(getFilesDir(), "todo.txt");
-        try {
-            FileUtils.writeLines(todoFile, items);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        items = itemDbHelper.getItems();
     }
 }

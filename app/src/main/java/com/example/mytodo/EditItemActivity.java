@@ -3,13 +3,12 @@ package com.example.mytodo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.google.common.base.Strings;
 
 public class EditItemActivity extends AppCompatActivity {
 
@@ -48,7 +47,7 @@ public class EditItemActivity extends AppCompatActivity {
 
     public void onEditItem(View view) {
         EditText etEditItem = (EditText) findViewById(R.id.etEditItem);
-        if(Strings.isNullOrEmpty(etEditItem.getText().toString())) {
+        if(TextUtils.isEmpty(etEditItem.getText().toString())) {
             Toast.makeText(this, "Item value is invalid", Toast.LENGTH_SHORT).show();
             return;
         }
