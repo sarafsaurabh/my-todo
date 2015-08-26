@@ -32,7 +32,7 @@ The app has all the functionality mentioned above. It also has a calendar widget
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/lWwDyoI.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='http://i.imgur.com/D7bd7Ad.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
