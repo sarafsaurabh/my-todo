@@ -12,14 +12,16 @@
         android:id="@+id/tvValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/bullet"
         android:drawablePadding="8dp"
-        android:textSize="15sp"
+        android:textSize="14sp"
+        android:textStyle="bold"
         android:text="Value" />
     <TextView
         android:id="@+id/tvDueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="italic"
         android:text="DueDate" />
     <TextView
         android:id="@+id/tvId"

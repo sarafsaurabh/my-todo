@@ -59,22 +59,22 @@ public class ItemAdapter extends ArrayAdapter<Item> {
         if(item.getDueDate() != null) {
             int days = Days.daysBetween(new DateTime(), new DateTime(item.getDueDate())).getDays();
             if(days < 0) {
-                viewHolder.dueDate.setText("Already Due");
-                convertView.setBackgroundColor(0xFFFFCAC8);
+                viewHolder.dueDate.setText("Already due");
+                convertView.setBackgroundColor(0xFFFFE5E5);
             } else if (days == 0) {
-                viewHolder.dueDate.setText("Due Today");
-                convertView.setBackgroundColor(0xFFFFF497);
+                viewHolder.dueDate.setText("Due today");
+                convertView.setBackgroundColor(0xFFFFFDD5);
             } else if (days == 1) {
-                viewHolder.dueDate.setText("Due Tomorrow");
-                convertView.setBackgroundColor(0xFFFFF497);
+                viewHolder.dueDate.setText("Due tomorrow");
+                convertView.setBackgroundColor(0xFFFFFDD5);
             } else {
-                viewHolder.dueDate.setText("Due In: " + days + " days");
-                convertView.setBackgroundColor(0xFFB6FFB6);
+                viewHolder.dueDate.setText("Due in " + days + " days");
+                convertView.setBackgroundColor(0xFFDFFFE4);
             }
             viewHolder.dueDate.setVisibility(View.VISIBLE);
         } else {
             viewHolder.dueDate.setVisibility(View.INVISIBLE);
-            convertView.setBackgroundColor(0xFFD4D4D4);
+            convertView.setBackgroundColor(0xFFEBEBEB);
         }
         return convertView;
     }
