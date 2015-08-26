@@ -45,7 +45,9 @@ public class EditItemDialog extends DialogFragment implements TextView.OnClickLi
         btnEditItem.setOnClickListener(this);
 
         CalendarView cal = (CalendarView) view.findViewById(R.id.calendarView);
-        cal.setDate(getArguments().getLong("dueDate"));
+        if(getArguments().getLong("dueDate") != 0) {
+            cal.setDate(getArguments().getLong("dueDate"));
+        }
         cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             public void onSelectedDayChange(CalendarView view, int year, int month, int day) {
                 Calendar c = new GregorianCalendar(year, month, day);
