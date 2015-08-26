@@ -13,24 +13,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/label_edit_item"
-        android:id="@+id/tvEditItem" />
+        android:text="@string/edit_task"
+        android:id="@+id/tvEditTask" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/etEditItem" />
+        android:id="@+id/etEditTask" />
 
     <CalendarView
         android:layout_width="250dp"
-        android:layout_height="260dp"
+        android:layout_height="270dp"
         android:id="@+id/calendarView" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/btn_save_item"
-        android:id="@+id/btnEditItem" />
+        android:text="@string/save_task"
+        android:id="@+id/btnEditTask" />
 
 
 </LinearLayout>

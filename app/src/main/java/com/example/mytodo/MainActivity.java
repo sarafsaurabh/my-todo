@@ -12,64 +12,64 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.mytodo.database.ItemDatabaseHelper;
-import com.example.mytodo.database.adapter.ItemAdapter;
-import com.example.mytodo.database.model.Item;
+import com.example.mytodo.database.TaskDatabaseHelper;
+import com.example.mytodo.database.adapter.TaskAdapter;
+import com.example.mytodo.database.model.Task;
 
 import java.sql.Date;
 import java.util.ArrayList;
 
 
 public class MainActivity extends FragmentActivity
-        implements EditItemDialog.EditItemDialogListener {
+        implements EditTaskDialog.EditTaskDialogListener {
 
-    ArrayList<Item> items;
-    ItemAdapter itemsAdapter;
-    ListView lvItems;
-    ItemDatabaseHelper itemDbHelper;
+    ArrayList<Task> tasks;
+    TaskAdapter taskAdapter;
+    ListView lvTasks;
+    TaskDatabaseHelper taskDbHelper;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        itemDbHelper = ItemDatabaseHelper.getInstance(this);
-        lvItems = (ListView)  findViewById(R.id.lvItems);
-        items = new ArrayList<Item>();
-        readItems();
-        itemsAdapter = new ItemAdapter(this, items);
-        lvItems.setAdapter(itemsAdapter);
+        taskDbHelper = TaskDatabaseHelper.getInstance(this);
+        lvTasks = (ListView)  findViewById(R.id.lvTasks);
+        tasks = new ArrayList<Task>();
+        readTasks();
+        taskAdapter = new TaskAdapter(this, tasks);
+        lvTasks.setAdapter(taskAdapter);
         setupListViewListener();
     }
 
     private void setupListViewListener() {
         //delete listener
-        lvItems.setOnItemLongClickListener(
+        lvTasks.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(
                             AdapterView<?> adapter, View item, int pos, long id) {
-                        itemDbHelper.deleteItem(items.get(pos));
-                        items.remove(pos);
-                        itemsAdapter.notifyDataSetChanged();
+                        taskDbHelper.deleteTask(tasks.get(pos));
+                        tasks.remove(pos);
+                        taskAdapter.notifyDataSetChanged();
                         return true;
                     }
                 }
         );
 
         //edit listener
-        lvItems.setOnItemClickListener(
+        lvTasks.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
 
-                        //show edit item dialog
+                        //show edit task dialog
                         FragmentManager fm = getSupportFragmentManager();
-                        EditItemDialog dialog =
-                                EditItemDialog.newInstance(
-                                        itemsAdapter.getItem(pos).getValue(),
+                        EditTaskDialog dialog =
+                                EditTaskDialog.newInstance(
+                                        taskAdapter.getItem(pos).getValue(),
                                         pos,
-                                        itemsAdapter.getItem(pos).getDueDate());
+                                        taskAdapter.getItem(pos).getDueDate());
                         dialog.show(fm, getClass().toString());
                     }
                 }
@@ -78,14 +78,14 @@ public class MainActivity extends FragmentActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds tasks to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar task clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
@@ -98,36 +98,36 @@ public class MainActivity extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public void onAddItem(View view) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
-        if(TextUtils.isEmpty(etNewItem.getText().toString())) {
-            Toast.makeText(this, "Item value is invalid", Toast.LENGTH_SHORT).show();
+    public void onAddTask(View view) {
+        EditText etNewTask = (EditText) findViewById(R.id.etNewTask);
+        if(TextUtils.isEmpty(etNewTask.getText().toString())) {
+            Toast.makeText(this, getString(R.string.enter_valid_task), Toast.LENGTH_SHORT).show();
             return;
         }
-        Item item = new Item();
-        item.setValue(etNewItem.getText().toString());
-        Long id = itemDbHelper.addOrUpdateItem(item);
-        item.setId(id);
-        itemsAdapter.add(item);
-        etNewItem.setText("");
+        Task task = new Task();
+        task.setValue(etNewTask.getText().toString());
+        Long id = taskDbHelper.addOrUpdateTask(task);
+        task.setId(id);
+        taskAdapter.add(task);
+        etNewTask.setText("");
     }
 
     @Override
-    public void onFinishEditDialog(String itemValue, int pos, Long dueDate) {
-        //get and replace item at position
-        Item item = items.get(pos);
-        item.setValue(itemValue);
+    public void onFinishEditDialog(String taskValue, int pos, Long dueDate) {
+        //get and replace task at position
+        Task task = tasks.get(pos);
+        task.setValue(taskValue);
         if(dueDate != null) {
-            item.setDueDate(new Date(dueDate));
+            task.setDueDate(new Date(dueDate));
         }
-        items.set(pos, item);
+        tasks.set(pos, task);
 
-        itemsAdapter.notifyDataSetChanged();
-        itemDbHelper.addOrUpdateItem(item);
-        Toast.makeText(this, "Item successfully edited", Toast.LENGTH_SHORT).show();
+        taskAdapter.notifyDataSetChanged();
+        taskDbHelper.addOrUpdateTask(task);
+        Toast.makeText(this, getString(R.string.task_edited), Toast.LENGTH_SHORT).show();
     }
 
-    private void readItems() {
-        items = itemDbHelper.getItems();
+    private void readTasks() {
+        tasks = taskDbHelper.getTasks();
     }
 }

@@ -5,7 +5,7 @@ import java.sql.Date;
 /**
  * Created by ssaraf on 8/24/15.
  */
-public class Item {
+public class Task {
     private Long id;
     private String value;
     private Date dueDate;

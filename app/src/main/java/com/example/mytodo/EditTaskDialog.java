@@ -16,15 +16,15 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class EditItemDialog extends DialogFragment implements TextView.OnClickListener {
+public class EditTaskDialog extends DialogFragment implements TextView.OnClickListener {
 
     Long dueDate = null;
 
-    public EditItemDialog() {
+    public EditTaskDialog() {
     }
 
-    public interface EditItemDialogListener {
-        void onFinishEditDialog(String itemValue, int pos, Long dueDate);
+    public interface EditTaskDialogListener {
+        void onFinishEditDialog(String taskValue, int pos, Long dueDate);
     }
 
 
@@ -33,16 +33,16 @@ public class EditItemDialog extends DialogFragment implements TextView.OnClickLi
                                 Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_edit_item, container);
+        View view = inflater.inflate(R.layout.fragment_edit_task, container);
 
-        EditText etEditItem = (EditText) view.findViewById(R.id.etEditItem);
-        String itemValue = getArguments().getString("item");
-        etEditItem.setText(itemValue);
-        etEditItem.setSelection(itemValue.length());
+        EditText etEditTask = (EditText) view.findViewById(R.id.etEditTask);
+        String taskValue = getArguments().getString("task");
+        etEditTask.setText(taskValue);
+        etEditTask.setSelection(taskValue.length());
 
-        Button btnEditItem = (Button) view.findViewById(R.id.btnEditItem);
+        Button btnEditTask = (Button) view.findViewById(R.id.btnEditTask);
 
-        btnEditItem.setOnClickListener(this);
+        btnEditTask.setOnClickListener(this);
 
         CalendarView cal = (CalendarView) view.findViewById(R.id.calendarView);
         if(getArguments().getLong("dueDate") != 0) {
@@ -57,10 +57,10 @@ public class EditItemDialog extends DialogFragment implements TextView.OnClickLi
         return view;
     }
 
-    public static EditItemDialog newInstance(String itemValue, int pos, Date dueDate) {
-        EditItemDialog frag = new EditItemDialog();
+    public static EditTaskDialog newInstance(String taskValue, int pos, Date dueDate) {
+        EditTaskDialog frag = new EditTaskDialog();
         Bundle args = new Bundle();
-        args.putString("item", itemValue);
+        args.putString("task", taskValue);
         args.putInt("pos", pos);
         if(dueDate != null) {
             args.putLong("dueDate", dueDate.getTime());
@@ -72,13 +72,13 @@ public class EditItemDialog extends DialogFragment implements TextView.OnClickLi
     @Override
     public void onClick(View view) {
 
-        EditText etEditItem = (EditText) this.getView().findViewById(R.id.etEditItem);
-        if (TextUtils.isEmpty(etEditItem.getText().toString())) {
-            Toast.makeText(view.getContext(), "Item value is invalid", Toast.LENGTH_SHORT).show();
+        EditText etEditTask = (EditText) this.getView().findViewById(R.id.etEditTask);
+        if (TextUtils.isEmpty(etEditTask.getText().toString())) {
+            Toast.makeText(view.getContext(), R.string.enter_valid_task, Toast.LENGTH_SHORT).show();
         }
-        EditItemDialogListener listener = (EditItemDialogListener) getActivity();
+        EditTaskDialogListener listener = (EditTaskDialogListener) getActivity();
         listener.onFinishEditDialog(
-                etEditItem.getText().toString(), getArguments().getInt("pos"), dueDate);
+                etEditTask.getText().toString(), getArguments().getInt("pos"), dueDate);
         dismiss();
     }
 }

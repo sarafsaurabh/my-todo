@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.mytodo.database.model.Item;
+import com.example.mytodo.database.model.Task;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -15,32 +15,32 @@ import java.util.ArrayList;
 /**
  * Created by ssaraf on 8/24/15.
  */
-public class ItemDatabaseHelper extends SQLiteOpenHelper {
+public class TaskDatabaseHelper extends SQLiteOpenHelper {
 
-    private static ItemDatabaseHelper instance;
+    private static TaskDatabaseHelper instance;
 
     // Database Info
     private static final String DATABASE_NAME = "todo";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Table Names
-    private static final String TABLE_ITEM = "item";
+    private static final String TABLE_TASK = "task";
 
-    // Item Table Columns
-    private static final String KEY_ITEM_ID = "id";
-    private static final String KEY_ITEM_VALUE = "value";
-    private static final String KEY_ITEM_DUEDATE = "dueDate";
+    // Task Table Columns
+    private static final String KEY_TASK_ID = "id";
+    private static final String KEY_TASK_VALUE = "value";
+    private static final String KEY_TASK_DUEDATE = "dueDate";
 
-    private ItemDatabaseHelper(Context context) {
+    private TaskDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static synchronized ItemDatabaseHelper getInstance(Context context) {
+    public static synchronized TaskDatabaseHelper getInstance(Context context) {
         // Use the application context, which will ensure that you
         // don't accidentally leak an Activity's context.
         // See this article for more information: http://bit.ly/6LRzfx
         if (instance == null) {
-            instance = new ItemDatabaseHelper(context.getApplicationContext());
+            instance = new TaskDatabaseHelper(context.getApplicationContext());
         }
         return instance;
     }
@@ -57,14 +57,14 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
     // If a database already exists on disk with the same DATABASE_NAME, this method will NOT be called.
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String CREATE_ITEM_TABLE_SQL = "CREATE TABLE " + TABLE_ITEM +
+        final String CREATE_TASK_TABLE_SQL = "CREATE TABLE " + TABLE_TASK +
                 "(" +
-                KEY_ITEM_ID + " INTEGER PRIMARY KEY," + // Define a primary key
-                KEY_ITEM_VALUE + " TEXT," +
-                KEY_ITEM_DUEDATE + " TEXT" +
+                KEY_TASK_ID + " INTEGER PRIMARY KEY," + // Define a primary key
+                KEY_TASK_VALUE + " TEXT," +
+                KEY_TASK_DUEDATE + " TEXT" +
                 ")";
 
-        db.execSQL(CREATE_ITEM_TABLE_SQL);
+        db.execSQL(CREATE_TASK_TABLE_SQL);
     }
 
     // Called when the database needs to be upgraded.
@@ -74,81 +74,81 @@ public class ItemDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             // Simplest implementation is to drop all old tables and recreate them
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_ITEM);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASK);
             onCreate(db);
         }
     }
 
-    // Insert an item into the database
-    // If the item id is null, we add the item, else update
-    public Long addOrUpdateItem(Item item) {
+    // Insert an task into the database
+    // If the task id is null, we add the task, else update
+    public Long addOrUpdateTask(Task task) {
         // Create and/or open the database for writing
         SQLiteDatabase db = getWritableDatabase();
 
 //        db.beginTransaction();
         try {
             ContentValues values = new ContentValues();
-            values.put(KEY_ITEM_VALUE, item.getValue());
-            if(item.getDueDate() != null) {
-                values.put(KEY_ITEM_DUEDATE, item.getDueDate().getTime());
+            values.put(KEY_TASK_VALUE, task.getValue());
+            if(task.getDueDate() != null) {
+                values.put(KEY_TASK_DUEDATE, task.getDueDate().getTime());
             }
 
-            if(item.getId() == null) {
-                return db.insertOrThrow(TABLE_ITEM, null, values);
+            if(task.getId() == null) {
+                return db.insertOrThrow(TABLE_TASK, null, values);
             } else {
-                int rows = db.update(TABLE_ITEM, values, KEY_ITEM_ID + "= ?",
-                        new String[]{item.getId().toString()});
+                int rows = db.update(TABLE_TASK, values, KEY_TASK_ID + "= ?",
+                        new String[]{task.getId().toString()});
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d(getClass().toString(), "Error while trying to add item to database");
+            Log.d(getClass().toString(), "Error while trying to add task to database");
         }
 
         return null;
     }
 
-    public ArrayList<Item> getItems() {
-        ArrayList<Item> items = new ArrayList<>();
+    public ArrayList<Task> getTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
 
-        final String ITEMS_SELECT_QUERY =
-                String.format("SELECT * FROM %s", TABLE_ITEM);
+        final String TASKS_SELECT_QUERY =
+                String.format("SELECT * FROM %s", TABLE_TASK);
 
         // "getReadableDatabase()" and "getWriteableDatabase()" return the same object (except under low
         // disk space scenarios)
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery(ITEMS_SELECT_QUERY, null);
+        Cursor cursor = db.rawQuery(TASKS_SELECT_QUERY, null);
         try {
             if (cursor.moveToFirst()) {
                 do {
-                    Item item = new Item();
-                    item.setId(cursor.getLong(cursor.getColumnIndex(KEY_ITEM_ID)));
-                    item.setValue(cursor.getString(cursor.getColumnIndex(KEY_ITEM_VALUE)));
-                    long dueDate = cursor.getLong(cursor.getColumnIndex(KEY_ITEM_DUEDATE));
+                    Task task = new Task();
+                    task.setId(cursor.getLong(cursor.getColumnIndex(KEY_TASK_ID)));
+                    task.setValue(cursor.getString(cursor.getColumnIndex(KEY_TASK_VALUE)));
+                    long dueDate = cursor.getLong(cursor.getColumnIndex(KEY_TASK_DUEDATE));
                     if(dueDate != 0) {
-                        item.setDueDate(new Date(dueDate));
+                        task.setDueDate(new Date(dueDate));
                     }
-                    items.add(item);
+                    tasks.add(task);
                 } while(cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.d(getClass().toString(), "Error while trying to get items from database");
+            Log.d(getClass().toString(), "Error while trying to get tasks from database");
         } finally {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
             }
         }
-        return items;
+        return tasks;
     }
 
-    public void deleteItem(Item item) {
+    public void deleteTask(Task task) {
         SQLiteDatabase db = getWritableDatabase();
         try {
-            int row = db.delete(TABLE_ITEM, KEY_ITEM_ID + "= ?",
-                    new String[]{item.getId().toString()});
+            int row = db.delete(TABLE_TASK, KEY_TASK_ID + "= ?",
+                    new String[]{task.getId().toString()});
 
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d(getClass().toString(), "Error while trying to delete item");
+            Log.d(getClass().toString(), "Error while trying to delete task");
         }
     }
 }

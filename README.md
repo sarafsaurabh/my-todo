@@ -1,6 +1,6 @@
 # Pre-work - MyTodo
 
-MyTodo is an android app that allows building a todo list and basic todo items management functionality including adding new items, editing and deleting an existing item.
+MyTodo is an android app that allows building a todo list and basic todo tasks management functionality including adding new tasks, editing and deleting an existing task.
 
 
 Submitted by: Saurabh Sraf
@@ -11,21 +11,21 @@ Time spent: 4 hours spent in total
 
 The following **required** functionality is completed:
 
-* [x] User can **successfully add and remove items** from the todo list
-* [x] User can **tap a todo item in the list and bring up an edit screen for the todo item** and then have any changes to the text reflected in the todo list.
-* [x] User can **persist todo items** and retrieve them properly on app restart
+* [x] User can **successfully add and remove tasks** from the todo list
+* [x] User can **tap a todo task in the list and bring up an edit screen for the todo task** and then have any changes to the text reflected in the todo list.
+* [x] User can **persist todo tasks** and retrieve them properly on app restart
 
 The following **optional** features are implemented:
 
-* [x] Persist the todo items [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
-* [x] Improve style of the todo items in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
-* [x] Add support for completion due dates for todo items (and display within listview item)
-* [x] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing items
-* [x] Add support for selecting the priority of each todo item (and display in listview item). (This is achieved using color-coded due dates)
+* [x] Persist the todo tasks [into SQLite](http://guides.codepath.com/android/Persisting-Data-to-the-Device#sqlite) instead of a text file
+* [x] Improve style of the todo tasks in the list [using a custom adapter](http://guides.codepath.com/android/Using-an-ArrayAdapter-with-ListView)
+* [x] Add support for completion due dates for todo tasks (and display within listview task)
+* [x] Use a [DialogFragment](http://guides.codepath.com/android/Using-DialogFragment) instead of new Activity for editing tasks
+* [x] Add support for selecting the priority of each todo task (and display in listview task). (This is achieved using color-coded due dates)
 * [x] Tweak the style improving the UI / UX, play with colors, images or backgrounds
 * [x] Anything else that you can get done to improve the app functionality!
 
-The app has all the functionality mentioned above. It also has a calendar widget to select the due date for a todo item. Additionally the todo items are displayed along with the days left for the item due date with color codes. Items which are past due are colored in red, items for future are green and items due soon are yellow in color. The app features a clean UI with a new app icon.
+The app has all the functionality mentioned above. It also has a calendar widget to select the due date for a todo task. Additionally the todo tasks are displayed along with the days left for the task due date with color codes. Items which are past due are colored in red, tasks for future are green and tasks due soon are yellow in color. The app features a clean UI with a new app icon.
 
 
 ## Video Walkthrough 
