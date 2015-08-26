@@ -7,10 +7,16 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 public class EditItemActivity extends AppCompatActivity {
+
+    Long dueDate = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +27,15 @@ public class EditItemActivity extends AppCompatActivity {
         String itemValue = getIntent().getStringExtra("item");
         etEditItem.setText(itemValue);
         etEditItem.setSelection(itemValue.length());
+
+        CalendarView cal = (CalendarView) findViewById(R.id.calendarView);
+        cal.setOnDateChangeListener(new CalendarView.OnDateChangeListener(){
+            public void onSelectedDayChange(CalendarView view, int year, int month, int day){
+                Calendar c = new GregorianCalendar(year, month, day);
+                dueDate = c.getTimeInMillis();
+            }
+        });
+
     }
 
     @Override
@@ -57,6 +72,10 @@ public class EditItemActivity extends AppCompatActivity {
         // Pass relevant data back as a result
         i.putExtra("item", etEditItem.getText().toString());
         i.putExtra("pos", getIntent().getIntExtra("pos", 0));
+
+        if(dueDate != null) {
+            i.putExtra("dueDate", dueDate);
+        }
 
         // Activity finished ok, return the data
         setResult(RESULT_OK, i); // set result code and bundle data for response
