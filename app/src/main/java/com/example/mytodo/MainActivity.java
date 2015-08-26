@@ -1,8 +1,8 @@
 package com.example.mytodo;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +20,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity
+        implements EditItemDialog.EditItemDialogListener {
 
     ArrayList<Item> items;
     ItemAdapter itemsAdapter;
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         itemsAdapter = new ItemAdapter(this, items);
         lvItems.setAdapter(itemsAdapter);
         setupListViewListener();
-        // Get singleton instance of database
     }
 
     private void setupListViewListener() {
@@ -62,11 +62,15 @@ public class MainActivity extends AppCompatActivity {
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapter, View item, int pos, long id) {
-                        //bring up edit item activity
-                        Intent i = new Intent(MainActivity.this, EditItemActivity.class);
-                        i.putExtra("item", itemsAdapter.getItem(pos).getValue());
-                        i.putExtra("pos", pos);
-                        startActivityForResult(i, 0); // not using request code as of now
+
+                        //show edit item dialog
+                        FragmentManager fm = getSupportFragmentManager();
+                        EditItemDialog dialog =
+                                EditItemDialog.newInstance(
+                                        itemsAdapter.getItem(pos).getValue(),
+                                        pos,
+                                        itemsAdapter.getItem(pos).getDueDate());
+                        dialog.show(fm, getClass().toString());
                     }
                 }
         );
@@ -109,27 +113,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent i) {
-        if (resultCode == RESULT_OK) {
-            String itemValue = i.getStringExtra("item");
-
-            //get and replace item at position
-            Item item = items.get(i.getIntExtra("pos", 0));
-            item.setValue(itemValue);
-            if(i.hasExtra("dueDate")) {
-                item.setDueDate(new Date(i.getLongExtra("dueDate", 0)));
-            }
-            items.set(i.getIntExtra("pos", 0), item);
-
-            itemsAdapter.notifyDataSetChanged();
-            itemDbHelper.addOrUpdateItem(item);
-            Toast.makeText(this, "Item successfully edited", Toast.LENGTH_SHORT).show();
-
-        } else {
-            Toast.makeText(this, "Unable to Edit Item", Toast.LENGTH_SHORT).show();
+    public void onFinishEditDialog(String itemValue, int pos, Long dueDate) {
+        //get and replace item at position
+        Item item = items.get(pos);
+        item.setValue(itemValue);
+        if(dueDate != null) {
+            item.setDueDate(new Date(dueDate));
         }
-    }
+        items.set(pos, item);
 
+        itemsAdapter.notifyDataSetChanged();
+        itemDbHelper.addOrUpdateItem(item);
+        Toast.makeText(this, "Item successfully edited", Toast.LENGTH_SHORT).show();
+    }
 
     private void readItems() {
         items = itemDbHelper.getItems();
