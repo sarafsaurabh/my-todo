@@ -14,19 +14,16 @@
         android:layout_height="wrap_content"
         android:drawablePadding="8dp"
         android:textSize="14sp"
-        android:textStyle="bold"
-        android:text="Value" />
+        android:textStyle="bold" />
     <TextView
         android:id="@+id/tvDueDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:textStyle="italic"
-        android:text="DueDate" />
+        android:textStyle="italic" />
     <TextView
         android:id="@+id/tvId"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:text="Id" />
+        android:layout_height="0dp" />
 
 </LinearLayout>
