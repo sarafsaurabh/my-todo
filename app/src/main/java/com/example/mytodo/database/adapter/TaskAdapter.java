@@ -2,6 +2,7 @@ package com.example.mytodo.database.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,24 +61,24 @@ public class TaskAdapter extends ArrayAdapter<Task> {
             int days = Days.daysBetween(new DateTime(), new DateTime(task.getDueDate())).getDays();
             if(days < 0) {
                 viewHolder.dueDate.setText(getContext().getString(R.string.already_due));
-                convertView.setBackgroundColor(getContext().getColor(R.color.lightred));
+                convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightred));
             } else if (days == 0) {
                 viewHolder.dueDate.setText(getContext().getString(R.string.due_today));
-                convertView.setBackgroundColor(getContext().getColor(R.color.lightyellow));
+                convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightyellow));
             } else if (days == 1) {
                 viewHolder.dueDate.setText(getContext().getString(R.string.due_tomorrow));
-                convertView.setBackgroundColor(getContext().getColor(R.color.lightyellow));
+                convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightyellow));
             } else {
                 viewHolder.dueDate.setText(
-                        getContext().getString(R.string.due_in) +
-                                days +
+                        getContext().getString(R.string.due_in) + " " +
+                                days + " " +
                                 getContext().getString(R.string.days));
-                convertView.setBackgroundColor(getContext().getColor(R.color.lightgreen));
+                convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightgreen));
             }
             viewHolder.dueDate.setVisibility(View.VISIBLE);
         } else {
             viewHolder.dueDate.setVisibility(View.INVISIBLE);
-            convertView.setBackgroundColor(getContext().getColor(R.color.lightgrey));
+            convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.lightgrey));
         }
         return convertView;
     }
